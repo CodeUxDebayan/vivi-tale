@@ -1,0 +1,73 @@
+.main {
+  min-height: 100vh;
+  padding: 12rem 3vw 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.h1 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 6rem);
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+
+.h2 {
+  font-size: clamp(1.5rem, 3vw, 3rem);
+  line-height: 1.2;
+  color: #aaa;
+  font-weight: 400;
+  max-width: 1000px;
+}
+
+.h2 a {
+  color: #fff;
+  text-decoration: underline;
+  text-decoration-color: #333;
+  text-underline-offset: 8px;
+  transition: text-decoration-color 0.3s;
+}
+
+.h2 a:hover {
+  text-decoration-color: #fff;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 3rem;
+  margin-top: 4rem;
+  border-top: 1px solid #222;
+  padding-top: 4rem;
+}
+
+.grid h3 {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #666;
+  margin-bottom: 2rem;
+  font-weight: 500;
+}
+
+.grid p {
+  font-size: 1.25rem;
+  line-height: 1.6;
+}
+
+.grid a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.grid a:hover {
+  color: #aaa;
+}

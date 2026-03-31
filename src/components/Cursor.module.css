@@ -1,0 +1,22 @@
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  mix-blend-mode: exclusion;
+  transform-origin: center center;
+}
+
+@media (max-width: 768px) {
+  .cursor {
+    display: none;
+  }
+}

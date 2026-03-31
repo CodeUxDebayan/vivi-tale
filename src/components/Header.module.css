@@ -1,0 +1,240 @@
+/* ─── Top Bar Header ─── */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 3vw;
+  pointer-events: none;
+  mix-blend-mode: difference;
+}
+
+.logo {
+  pointer-events: auto;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: opacity 0.3s ease;
+}
+
+.logo:hover {
+  opacity: 0.7;
+}
+
+.logoSquare {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-red);
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+.headerRight {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.clock {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.3;
+}
+
+.clockCity {
+  font-weight: 700;
+  opacity: 0.5;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+}
+
+.clockTime {
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Floating Pill Bottom ─── */
+.pillContainer {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.menuPill {
+  background-color: var(--color-grey-1);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: auto;
+  min-width: 100px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+.menuBtn {
+  background: none;
+  border: none;
+  color: var(--color-white);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0 1.8rem;
+  white-space: nowrap;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0 0.5rem;
+  height: 100%;
+}
+
+.navItemWrap {
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.navItem {
+  display: block;
+  color: var(--color-white);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0 1rem;
+  position: relative;
+  transition: color 0.3s ease, opacity 0.3s ease;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+.navItem:hover {
+  opacity: 1;
+  color: var(--color-white);
+}
+
+.active {
+  opacity: 1;
+  color: var(--color-white);
+}
+
+.activeSquare {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-red);
+  border-radius: 1px;
+  margin-right: 0.4rem;
+  vertical-align: middle;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-grey-3);
+  padding: 0 1rem;
+  height: 100%;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+}
+
+.closeBtn:hover {
+  color: var(--color-white);
+}
+
+/* ─── Dark/Light Toggle ─── */
+.themeToggle {
+  background-color: var(--color-black);
+  border: none;
+  cursor: pointer;
+  height: 52px;
+  width: 52px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  pointer-events: auto;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  transition: background-color 0.3s ease;
+}
+
+[data-theme="light"] .themeToggle {
+  background-color: var(--color-offwhite-2);
+}
+
+.themeCircle {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--color-grey-3);
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              background-color 0.4s ease;
+}
+
+.themeCircle[data-active="true"] {
+  background-color: var(--color-offwhite);
+  transform: scale(1.2);
+}
+
+.themeCircle:first-child {
+  position: relative;
+  left: 2px;
+  z-index: 2;
+}
+
+.themeCircle:last-child {
+  position: relative;
+  left: -2px;
+  z-index: 1;
+}
+
+.themeToggle:hover .themeCircle:first-child {
+  transform: translate(5px);
+}
+
+.themeToggle:hover .themeCircle:last-child {
+  transform: translate(-5px);
+}

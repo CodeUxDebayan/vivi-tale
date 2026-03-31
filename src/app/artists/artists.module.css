@@ -1,0 +1,159 @@
+.main {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+  background: #000;
+}
+
+/* Background Image and Text Masking Layer */
+.bgLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bgImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.15;
+  filter: blur(40px) brightness(0.5);
+  transform: scale(1.1);
+}
+
+.massiveBgText {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: clamp(10rem, 25vw, 35rem);
+  text-transform: uppercase;
+  color: #fff;
+  opacity: 0.8;
+  white-space: nowrap;
+  letter-spacing: -0.05em;
+  font-weight: 700;
+  /* Clip to create that cut-off background typography feel */
+  max-width: 100vw;
+  overflow: hidden;
+}
+
+/* Foreground Grid Layout */
+.foreground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 350px 1fr 100px;
+  align-items: center;
+}
+
+.listCol {
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 0 10vh 4vw;
+}
+
+.ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.li {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.activeSquare {
+  position: absolute;
+  left: -20px;
+  width: 8px;
+  height: 8px;
+  background-color: #ff243a;
+  display: inline-block;
+}
+
+.link {
+  font-family: var(--font-sans);
+  font-size: 1.1rem;
+  color: #666;
+  text-decoration: none;
+  transition: color 0.3s;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+}
+
+.link:hover, .activeLink {
+  color: #fff;
+}
+
+/* Central Media Container */
+.mediaCol {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.mediaWrapper {
+  width: clamp(300px, 45vw, 800px);
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+}
+
+.media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholderMedia {
+  width: 100%;
+  height: 100%;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+/* Right Pagination Container */
+.paginationCol {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  height: 100%;
+  padding-right: 2vw;
+}
+
+.pageDot {
+  width: 6px;
+  height: 6px;
+  background: #333;
+  transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.activeDot {
+  background: #fff;
+  height: 24px;
+}

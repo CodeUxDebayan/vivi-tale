@@ -1,0 +1,251 @@
+.footer {
+  padding-bottom: 3rem;
+  position: relative;
+  z-index: 10;
+}
+
+.wrapper {
+  background-color: var(--color-offblack);
+  border-radius: 10px;
+  margin: 0 1rem;
+  padding: 5rem 5vw 4rem;
+  color: var(--color-white);
+  overflow: hidden;
+  position: relative;
+}
+
+/* ─── Top Row ─── */
+.topRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 6rem;
+}
+
+@media (max-width: 768px) {
+  .topRow {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+}
+
+/* ─── Left Col ─── */
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.tagline {
+  font-family: var(--font-sans);
+  font-size: clamp(1.5rem, 3vw, 2.8rem);
+  font-weight: 500;
+  color: var(--color-white);
+  line-height: 1.2;
+  max-width: 30rem;
+}
+
+/* Newsletter */
+.newsletter {
+  position: relative;
+  max-width: 28rem;
+}
+
+.newsletterForm {
+  position: relative;
+}
+
+.newsletterInput {
+  width: 100%;
+  height: 48px;
+  background-color: var(--color-grey-1);
+  border: none;
+  border-radius: 4px;
+  padding: 0 3rem 0 1.4rem;
+  color: var(--color-white);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  outline: none;
+  transition: background-color 0.3s ease;
+}
+
+.newsletterInput::placeholder {
+  color: var(--color-grey-3);
+}
+
+.newsletterInput:focus {
+  background-color: #44454a;
+}
+
+.newsletterBtn {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-200%);
+  background: none;
+  border: none;
+  color: var(--color-white);
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+              opacity 0.3s ease;
+}
+
+.newsletterBtnVisible {
+  transform: translateY(-50%);
+  opacity: 1;
+}
+
+.successMsg {
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--color-grey-3);
+}
+
+/* Socials */
+.socials {
+  display: flex;
+  gap: 0;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  flex-wrap: wrap;
+}
+
+.socialLink {
+  color: var(--color-grey-3);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  padding-right: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.socialLink span {
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.socialLink::after {
+  content: attr(data-title);
+  color: var(--color-grey-3);
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.socialLink:hover span {
+  transform: translateY(-100%);
+}
+
+.socialLink:hover::after {
+  transform: translateY(0);
+}
+
+/* ─── Right Col ─── */
+.rightCol {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-grey-3);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.navItem:hover {
+  color: var(--color-white);
+}
+
+.navSquare {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-red);
+  border-radius: 1px;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transform: scale(0);
+}
+
+.navItem:hover .navSquare {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.navItem:hover span:last-child {
+  transform: translateX(0.8rem);
+  transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.navItem span:last-child {
+  transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* Credits */
+.credits {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.65rem;
+  color: var(--color-grey-3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 3rem;
+  opacity: 0.6;
+}
+
+.creditsTitle {
+  white-space: nowrap;
+}
+
+.creditsItems {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.creditsSep {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  background-color: var(--color-grey-3);
+  border-radius: 50%;
+  opacity: 0.4;
+}
+
+/* ─── Giant Logo ─── */
+.bigLogo {
+  font-family: var(--font-display);
+  font-size: clamp(5rem, 15vw, 18rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  /* Ghost/outline effect — fill transparent, just stroke */
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255,255,255,0.12);
+  text-stroke: 1.5px rgba(255,255,255,0.12);
+  user-select: none;
+  pointer-events: none;
+  margin-top: 3rem;
+}
