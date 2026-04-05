@@ -1,0 +1,134 @@
+import Link from "next/link";
+import styles from "../../admin.module.css";
+import { getProjects, updateProject } from "../../../actions";
+
+export default async function EditProjectPage({ params }) {
+  const id = Number(params.id);
+  const projects = await getProjects();
+  const project = projects.find((p) => Number(p.id) === id) || null;
+
+  if (!project) {
+    return (
+      <div style={{ padding: "3rem" }}>
+        <h2>Project not found</h2>
+        <p>The project with id {id} could not be found.</p>
+        <p>
+          <Link href="/admin">Back to Admin</Link>
+        </p>
+      </div>
+    );
+  }
+
+  const action = async (formData) => {
+    "use server";
+    await updateProject(id, formData);
+  };
+
+  return (
+    <div
+      className={styles.container}
+      style={{ maxWidth: "900px", padding: "2rem" }}
+    >
+      <header className={styles.header}>
+        <h1>Edit Project</h1>
+        <Link href="/admin">Return to Admin</Link>
+      </header>
+
+      <div style={{ marginTop: "1.5rem" }}>
+        <form action={action}>
+          <div className={styles.inputGroup}>
+            <label>Title</label>
+            <input
+              type="text"
+              name="title"
+              required
+              defaultValue={project.title}
+              className={styles.input}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label>Slug (Optional)</label>
+            <input
+              type="text"
+              name="slug"
+              defaultValue={project.slug}
+              className={styles.input}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label>Category</label>
+            <input
+              type="text"
+              name="category"
+              required
+              defaultValue={project.category}
+              className={styles.input}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label>Artist Name</label>
+            <input
+              type="text"
+              name="artist"
+              required
+              defaultValue={project.artist}
+              className={styles.input}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label>Artist Slug (Optional)</label>
+            <input
+              type="text"
+              name="artistSlug"
+              defaultValue={project.artistSlug}
+              className={styles.input}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label>Image URL</label>
+            <input
+              type="url"
+              name="imageUrl"
+              required
+              defaultValue={project.imageUrl}
+              className={styles.input}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label>Video URL (Optional)</label>
+            <input
+              type="url"
+              name="videoUrl"
+              defaultValue={project.videoUrl || ""}
+              className={styles.input}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label>Description (Optional)</label>
+            <textarea
+              name="description"
+              className={styles.textarea}
+              defaultValue={project.description || ""}
+            ></textarea>
+          </div>
+
+          <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
+            <button type="submit" className={styles.button}>
+              Save Changes
+            </button>
+            <Link href="/admin" className={styles.deleteButton}>
+              Cancel
+            </Link>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}

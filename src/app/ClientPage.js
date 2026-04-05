@@ -1,55 +1,23 @@
-'use client';
-import { useState, useRef, useEffect, useCallback } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
-import SplitTextReveal from '../components/SplitTextReveal';
-import styles from './page.module.css';
+"use client";
+import { useState, useRef, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
+import SplitTextReveal from "../components/SplitTextReveal";
+import GooeyBackground from "../components/GooeyBackground";
+import ClientsMarquee from "../components/ClientsMarquee";
+import styles from "./page.module.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ─── Dummy media for trail and showcases ───
-const TRAIL_IMAGES = [
-  'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80',
-  'https://images.unsplash.com/photo-1614850523060-8da1d56ae167?w=400&q=80',
-  'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=400&q=80',
-  'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=400&q=80',
-  'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400&q=80',
-  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80',
-  'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=400&q=80',
-  'https://images.unsplash.com/photo-1545987796-200677ee1011?w=400&q=80',
-];
-
-const CATEGORY_MEDIA = {
-  'Animation':       'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80',
-  'CGI':             'https://images.unsplash.com/photo-1614850523060-8da1d56ae167?w=1200&q=80',
-  'Design':          'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=1200&q=80',
-  'Motion Graphics': 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1200&q=80',
-  'Photography':     'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1200&q=80',
-  'Luxury':          'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&q=80',
-  'Characters':      'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1200&q=80',
-  'Typography':      'https://images.unsplash.com/photo-1545987796-200677ee1011?w=1200&q=80',
-  'AI':              'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=1200&q=80',
-  'Set Design':      'https://images.unsplash.com/photo-1509343256512-d77a5cb3791b?w=1200&q=80',
-  'Beauty':          'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1200&q=80',
-};
-
-const ALL_ARTISTS = [
-  { name: 'Noisegraph',       slug: 'noisegraph',       img: TRAIL_IMAGES[0] },
-  { name: 'Ben Fearnley',     slug: 'ben-fearnley',     img: TRAIL_IMAGES[1] },
-  { name: 'Arcade Studio',    slug: 'arcade-studio',    img: TRAIL_IMAGES[2] },
-  { name: 'Styleframe',       slug: 'styleframe',       img: TRAIL_IMAGES[3] },
-  { name: 'JVG',              slug: 'jvg',              img: TRAIL_IMAGES[4] },
-  { name: 'Garrigosa Studio', slug: 'garrigosa-studio', img: TRAIL_IMAGES[5] },
-  { name: 'Athom Studios',    slug: 'athom-studios',    img: TRAIL_IMAGES[6] },
-  { name: 'Platinum',         slug: 'platinum',         img: TRAIL_IMAGES[7] },
-];
+const FALLBACK_IMAGE = "/logo.png";
+const FALLBACK_VIDEO = "/intro_video.mp4";
 
 // ─── Cursor Trail ───
-function CursorTrail({ containerRef }) {
+function CursorTrail({ containerRef, images = [] }) {
   const trailRef = useRef(null);
-  const trail = useRef([]);
   const lastPos = useRef({ x: 0, y: 0 });
   const idx = useRef(0);
 
@@ -66,7 +34,7 @@ function CursorTrail({ containerRef }) {
       if (dx + dy < 60) return;
       lastPos.current = { x, y };
 
-      const pool = trailRef.current?.querySelectorAll('[data-trail-img]');
+      const pool = trailRef.current?.querySelectorAll("[data-trail-img]");
       if (!pool || pool.length === 0) return;
       const img = pool[idx.current % pool.length];
       idx.current++;
@@ -74,24 +42,35 @@ function CursorTrail({ containerRef }) {
       img.style.left = `${x - 60}px`;
       img.style.top = `${y - 60}px`;
       gsap.killTweensOf(img);
-      gsap.fromTo(img, 
+      gsap.fromTo(
+        img,
         { opacity: 0, scale: 0.7, rotate: (Math.random() - 0.5) * 20 },
-        { opacity: 1, scale: 1, rotate: 0, duration: 0.4, ease: 'power3.out',
+        {
+          opacity: 1,
+          scale: 1,
+          rotate: 0,
+          duration: 0.4,
+          ease: "power3.out",
           onComplete: () => {
-            gsap.to(img, { opacity: 0, duration: 0.6, delay: 0.5, ease: 'power2.in' });
-          }
-        }
+            gsap.to(img, {
+              opacity: 0,
+              duration: 0.6,
+              delay: 0.5,
+              ease: "power2.in",
+            });
+          },
+        },
       );
     };
 
-    container.addEventListener('mousemove', handleMove);
-    return () => container.removeEventListener('mousemove', handleMove);
+    container.addEventListener("mousemove", handleMove);
+    return () => container.removeEventListener("mousemove", handleMove);
   }, [containerRef]);
 
   return (
     <div ref={trailRef} className={styles.trailContainer}>
-      {TRAIL_IMAGES.map((src, i) => (
-        <img
+      {images.map((src, i) => (
+        <Image
           key={i}
           src={src}
           alt=""
@@ -126,14 +105,21 @@ function CategoryRow({ name, count, img }) {
       {/* Immersive hover reveal strip */}
       <motion.div
         className={styles.catReveal}
-        initial={{ clipPath: 'inset(0 0 100% round 10px)' }}
-        animate={hovered
-          ? { clipPath: 'inset(0 0 0% round 10px)' }
-          : { clipPath: 'inset(0 0 100% round 10px)' }
+        initial={{ clipPath: "inset(0 0 100% round 10px)" }}
+        animate={
+          hovered
+            ? { clipPath: "inset(0 0 0% round 10px)" }
+            : { clipPath: "inset(0 0 100% round 10px)" }
         }
         transition={{ duration: 0.7, ease: [0.165, 0.84, 0.44, 1] }}
       >
-        <img src={img} alt={name} className={styles.catRevealImg} />
+        <Image
+          src={img}
+          alt={name}
+          className={styles.catRevealImg}
+          fill
+          unoptimized
+        />
         <div className={styles.catRevealOverlay}>
           <span className={styles.catRevealName}>{name}</span>
           <span className={styles.catRevealArrow}>→</span>
@@ -144,14 +130,47 @@ function CategoryRow({ name, count, img }) {
 }
 
 // ─── Main Client Page ───
-export default function ClientPage({ projects }) {
+export default function ClientPage({ projects, artists = [] }) {
   const familyRef = useRef(null);
+  const showreelRef = useRef(null);
+  const showreelVideoRef = useRef(null);
+  const showreelOverlayRef = useRef(null);
+  const showreelProgressBarRef = useRef(null);
   const counterRef = useRef(null);
   const containerRef = useRef(null);
-  const [activeIdx, setActiveIdx] = useState(0);
+  const lastFamilyIdxRef = useRef(-1);
+  const [activeFamilyIdx, setActiveFamilyIdx] = useState(0);
+  const [activeReelIdx, setActiveReelIdx] = useState(0);
+  const [showreelCopyStep, setShowreelCopyStep] = useState(-1);
+  const [isMobile, setIsMobile] = useState(false);
+  const [introPhase, setIntroPhase] = useState("playing");
 
+  const familyArtists = Array.isArray(artists) ? artists : [];
   const featuredProjects = projects.slice(0, 5);
-  const activeProject = featuredProjects[activeIdx] || featuredProjects[0] || null;
+  const activeProject =
+    featuredProjects[activeReelIdx] || featuredProjects[0] || null;
+  const activeArtist = familyArtists[activeFamilyIdx] || null;
+  const activeArtistProjects = activeArtist
+    ? projects
+        .filter(
+          (p) =>
+            p.artistSlug === activeArtist.slug ||
+            (p.artist || "")
+              .toLowerCase()
+              .includes(activeArtist.name.toLowerCase()),
+        )
+        .slice(0, 6)
+    : [];
+  const trailImages = projects
+    .filter((project) => Boolean(project.imageUrl))
+    .slice(0, 8)
+    .map((project) => project.imageUrl);
+  const categoryImages = projects.reduce((acc, project) => {
+    if (project.category && project.imageUrl && !acc[project.category]) {
+      acc[project.category] = project.imageUrl;
+    }
+    return acc;
+  }, {});
 
   // Category counts from projects + defaults
   const catCounts = projects.reduce((acc, p) => {
@@ -159,33 +178,214 @@ export default function ClientPage({ projects }) {
     return acc;
   }, {});
   const defaultCategories = {
-    'Animation': 18, 'CGI': 12, 'Design': 9, 'Motion Graphics': 14,
-    'Photography': 7, 'Luxury': 17, 'Characters': 26, 'AI': 13
+    Animation: 18,
+    CGI: 12,
+    Design: 9,
+    "Motion Graphics": 14,
+    Photography: 7,
+    Luxury: 17,
+    Characters: 26,
+    AI: 13,
   };
-  const categories = Object.keys(catCounts).length > 0 ? catCounts : defaultCategories;
+  const categories =
+    Object.keys(catCounts).length > 0 ? catCounts : defaultCategories;
 
   // GSAP scroll counter
   useEffect(() => {
     if (!counterRef.current || !containerRef.current) return;
+
+    const setProgressScale = showreelProgressBarRef.current
+      ? gsap.quickSetter(showreelProgressBarRef.current, "scaleX")
+      : null;
+
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
         trigger: containerRef.current,
-        start: 'top top',
-        end: 'bottom bottom',
+        start: "top top",
+        end: "bottom bottom",
         scrub: 1,
         onUpdate: (self) => {
           if (counterRef.current) {
             const val = Math.round(self.progress * 100);
-            counterRef.current.textContent = val.toString().padStart(2, '0');
+            counterRef.current.textContent = val.toString().padStart(2, "0");
           }
-        }
+
+          setProgressScale?.(self.progress);
+        },
       });
     });
     return () => ctx.revert();
   }, []);
 
+  useEffect(() => {
+    if (
+      !showreelRef.current ||
+      !showreelVideoRef.current ||
+      !showreelOverlayRef.current
+    )
+      return;
+
+    const setVideoScale = gsap.quickSetter(showreelVideoRef.current, "scale");
+    const setVideoY = gsap.quickSetter(showreelVideoRef.current, "y", "px");
+    const setVideoOpacity = gsap.quickSetter(
+      showreelVideoRef.current,
+      "opacity",
+    );
+    const setOverlayOpacity = gsap.quickSetter(
+      showreelOverlayRef.current,
+      "opacity",
+    );
+
+    setVideoScale(0.88);
+    setVideoY(42);
+    setVideoOpacity(0.36);
+    setOverlayOpacity(0.34);
+
+    const trigger = ScrollTrigger.create({
+      trigger: showreelRef.current,
+      start: "top top",
+      end: "+=220%",
+      pin: true,
+      pinSpacing: true,
+      anticipatePin: 1,
+      scrub: 1,
+      onUpdate: (self) => {
+        const p = self.progress;
+        const visualProgress = Math.min(p / 0.28, 1);
+        setVideoScale(0.88 + visualProgress * 0.12);
+        setVideoY((1 - visualProgress) * 42);
+        setVideoOpacity(0.36 + visualProgress * 0.64);
+        setOverlayOpacity(0.34 - visualProgress * 0.16);
+
+        const nextStep = p < 0.28 ? -1 : p < 0.6 ? 0 : 1;
+        setShowreelCopyStep((prev) => (prev === nextStep ? prev : nextStep));
+      },
+    });
+
+    return () => trigger.kill();
+  }, []);
+
+  useEffect(() => {
+    const checkMobile = () =>
+      setIsMobile(window.matchMedia("(max-width: 768px)").matches);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    const interval = setInterval(() => {
+      setActiveFamilyIdx(
+        (prev) => (prev + 1) % Math.max(familyArtists.length, 1),
+      );
+      setActiveReelIdx(
+        (prev) => (prev + 1) % Math.max(featuredProjects.length, 1),
+      );
+    }, 2600);
+    return () => clearInterval(interval);
+  }, [isMobile, featuredProjects.length, familyArtists.length]);
+
+  useEffect(() => {
+    if (!familyRef.current || familyArtists.length === 0) return;
+
+    const trigger = ScrollTrigger.create({
+      trigger: familyRef.current,
+      start: "top 65%",
+      end: "bottom 35%",
+      scrub: true,
+      onUpdate: (self) => {
+        const idx = Math.min(
+          familyArtists.length - 1,
+          Math.floor(self.progress * familyArtists.length),
+        );
+        if (idx !== lastFamilyIdxRef.current) {
+          lastFamilyIdxRef.current = idx;
+          setActiveFamilyIdx(idx);
+        }
+      },
+    });
+
+    return () => trigger.kill();
+  }, [familyArtists.length]);
+
+  useEffect(() => {
+    if (introPhase !== "playing") return;
+
+    // Safety timeout in case video ended doesn't fire on some browsers.
+    const forceExit = setTimeout(() => {
+      setIntroPhase((prev) => (prev === "playing" ? "exiting" : prev));
+    }, 5200);
+
+    return () => clearTimeout(forceExit);
+  }, [introPhase]);
+
+  useEffect(() => {
+    if (introPhase !== "exiting") return;
+
+    const complete = setTimeout(() => {
+      setIntroPhase("done");
+    }, 900);
+
+    return () => clearTimeout(complete);
+  }, [introPhase]);
+
+  useEffect(() => {
+    const shouldLockScroll = introPhase !== "done";
+    const previousOverflow = document.body.style.overflow;
+
+    if (shouldLockScroll) {
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [introPhase]);
+
   return (
     <div className={styles.pageRoot} ref={containerRef}>
+      <AnimatePresence>
+        {introPhase !== "done" && (
+          <motion.div
+            className={styles.introLoader}
+            initial={{ opacity: 1, scale: 1 }}
+            animate={
+              introPhase === "exiting"
+                ? { opacity: 0, scale: 1.08, filter: "blur(8px)" }
+                : { opacity: 1, scale: 1, filter: "blur(0px)" }
+            }
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: introPhase === "exiting" ? 0.9 : 0.45,
+              ease: "easeInOut",
+            }}
+          >
+            <motion.video
+              src={FALLBACK_VIDEO}
+              className={styles.introLoaderVideo}
+              autoPlay
+              muted
+              playsInline
+              preload="auto"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.45, ease: "easeOut" }}
+              onEnded={() => {
+                setIntroPhase((prev) =>
+                  prev === "playing" ? "exiting" : prev,
+                );
+              }}
+              onError={() => {
+                setIntroPhase((prev) =>
+                  prev === "playing" ? "exiting" : prev,
+                );
+              }}
+            />
+            <div className={styles.introLoaderOverlay} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── FIXED FULL-PAGE BACKGROUND ── */}
       <AnimatePresence>
@@ -196,20 +396,26 @@ export default function ClientPage({ projects }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: 'easeOut' }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
           >
-            <img src={activeProject.imageUrl} alt="" className={styles.pageBgImg} />
+            <Image
+              src={activeProject.imageUrl || FALLBACK_IMAGE}
+              alt=""
+              className={styles.pageBgImg}
+              fill
+              unoptimized
+            />
             <div className={styles.pageBgOverlay} />
           </motion.div>
         )}
       </AnimatePresence>
 
       <div className={styles.pageFg}>
-
         {/* ══════════════════════════════════
             SECTION 1 — HERO
         ══════════════════════════════════ */}
         <section className={styles.heroSection}>
+          <GooeyBackground />
           <div className={styles.heroInner}>
             <SplitTextReveal
               elementType="h1"
@@ -222,17 +428,22 @@ export default function ClientPage({ projects }) {
               className={styles.heroTagline}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.4, duration: 0.8, ease: 'easeOut' }}
+              transition={{ delay: 1.4, duration: 0.8, ease: "easeOut" }}
             >
-              Your creative partner for Animation &amp; Imagery.<br />
+              Your creative partner for Animation &amp; Imagery.
+              <br />
               Digital Artists. World-class. Nothing else.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.8, duration: 0.8, ease: 'easeOut' }}
+              transition={{ delay: 1.8, duration: 0.8, ease: "easeOut" }}
             >
-              <Link href="/about" className={styles.heroBtn} data-cursor="hover">
+              <Link
+                href="/about"
+                className={styles.heroBtn}
+                data-cursor="hover"
+              >
                 <span className={styles.heroBtnSquare} />
                 Read More
               </Link>
@@ -243,52 +454,131 @@ export default function ClientPage({ projects }) {
         {/* ══════════════════════════════════
             SECTION 2 — SHOWREEL
         ══════════════════════════════════ */}
-        <section className={styles.showreelSection}>
-          <div className={styles.showreelInner}>
-            <div className={styles.showreelVideo}>
-              <video
-                src="https://cdn.coverr.co/videos/coverr-abstract-light-shapes-1588/1080p.mp4"
-                autoPlay loop muted playsInline
-                className={styles.showreelVid}
-                poster="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=1400&q=80"
-              />
-              <div className={styles.showreelVidOverlay} />
+        <section className={styles.showreelSection} ref={showreelRef}>
+          <motion.div
+            className={styles.showreelInner}
+            initial={{ opacity: 0, y: 70 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className={styles.showreelCopyWrap}>
+              <AnimatePresence mode="wait">
+                {showreelCopyStep === -1 ? null : showreelCopyStep === 0 ? (
+                  <motion.div
+                    key="showreel-copy-1"
+                    className={styles.showreelCopyPanel}
+                    initial={{ opacity: 0, y: 16, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -16, scale: 0.98 }}
+                    transition={{ duration: 0.42, ease: "easeOut" }}
+                  >
+                    <span className={styles.showreelCopyEyebrow}>Showreel</span>
+                    <h2 className={styles.showreelHeading}>
+                      Chaos Meets Vision
+                    </h2>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="showreel-copy-2"
+                    className={styles.showreelCopyPanel}
+                    initial={{ opacity: 0, y: 16, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -16, scale: 0.98 }}
+                    transition={{ duration: 0.42, ease: "easeOut" }}
+                  >
+                    <span className={styles.showreelCopyEyebrow}>Showreel</span>
+                    <h2 className={styles.showreelHeading}>
+                      Vision becomes real
+                    </h2>
+                    <Link
+                      href="/projects"
+                      className={styles.showreelCopyCta}
+                      data-cursor="hover"
+                    >
+                      Explore our works
+                      <span className={styles.heroBtnSquare} />
+                    </Link>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
+
+            <motion.div ref={showreelVideoRef} className={styles.showreelVideo}>
+              <video
+                src={activeProject?.videoUrl || FALLBACK_VIDEO}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className={styles.showreelVid}
+                poster={activeProject?.imageUrl || FALLBACK_IMAGE}
+              />
+              <motion.div
+                ref={showreelOverlayRef}
+                className={styles.showreelVidOverlay}
+              />
+            </motion.div>
             <div className={styles.showreelMeta}>
-              <h2 className={styles.showreelTitle}>Our Work since...</h2>
+              <motion.h2
+                className={styles.showreelTitle}
+                initial={{ opacity: 0, scale: 0.9, y: 18 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.5 }}
+                transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+              >
+                Showreel
+              </motion.h2>
               <div className={styles.showreelDates}>
                 <span>2010</span>
                 <span className={styles.dateSep} />
-                <span className={styles.scrollCount} ref={counterRef}>00</span>
+                <span className={styles.scrollCount} ref={counterRef}>
+                  00
+                </span>
               </div>
             </div>
-          </div>
+            <div className={styles.showreelProgressWrap}>
+              <span className={styles.showreelProgressLabel}>Progress</span>
+              <div className={styles.showreelProgressTrack}>
+                <div
+                  ref={showreelProgressBarRef}
+                  className={styles.showreelProgressBar}
+                />
+              </div>
+            </div>
+          </motion.div>
         </section>
 
         {/* ══════════════════════════════════
             SECTION 3 — THE FAMILY
         ══════════════════════════════════ */}
         <section className={styles.familySection} ref={familyRef}>
-          <CursorTrail containerRef={familyRef} />
+          {!isMobile && (
+            <CursorTrail containerRef={familyRef} images={trailImages} />
+          )}
           <div className={styles.familyInner}>
             <h2 className={styles.familyTitle}>The Family</h2>
             <div className={styles.familyLayout}>
               {/* Left: media preview */}
               <div className={styles.familyMedia}>
                 <AnimatePresence mode="wait">
-                  {ALL_ARTISTS[activeIdx] && (
+                  {activeArtist && (
                     <motion.div
-                      key={ALL_ARTISTS[activeIdx].slug}
+                      key={activeArtist.slug}
                       className={styles.familyMediaInner}
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 1.05 }}
-                      transition={{ duration: 0.6, ease: 'easeOut' }}
+                      transition={{ duration: 0.6, ease: "easeOut" }}
                     >
-                      <img
-                        src={ALL_ARTISTS[activeIdx].img}
-                        alt={ALL_ARTISTS[activeIdx].name}
+                      <Image
+                        src={
+                          activeArtistProjects[0]?.imageUrl || FALLBACK_IMAGE
+                        }
+                        alt={activeArtist.name}
                         className={styles.familyMediaImg}
+                        fill
+                        unoptimized
                       />
                     </motion.div>
                   )}
@@ -296,20 +586,57 @@ export default function ClientPage({ projects }) {
               </div>
               {/* Right: name list */}
               <div className={styles.familyList}>
-                <span className={styles.familySquare} />
-                {ALL_ARTISTS.map((artist, i) => (
+                {familyArtists.map((artist, i) => (
                   <div key={artist.slug} className={styles.familyItem}>
                     <Link
                       href={`/artists/${artist.slug}`}
-                      className={`${styles.familyLink} ${activeIdx === i ? styles.familyLinkActive : ''}`}
-                      onMouseEnter={() => setActiveIdx(i)}
+                      className={`${styles.familyLink} ${activeFamilyIdx === i ? styles.familyLinkActive : ""}`}
+                      onMouseEnter={() => setActiveFamilyIdx(i)}
+                      onClick={() => setActiveFamilyIdx(i)}
                       data-cursor="hover"
                     >
+                      {activeFamilyIdx === i && (
+                        <motion.span
+                          layoutId="family-active-dot"
+                          className={styles.familyInlineDot}
+                          transition={{
+                            type: "spring",
+                            stiffness: 520,
+                            damping: 34,
+                          }}
+                        />
+                      )}
                       {artist.name}
                     </Link>
                   </div>
                 ))}
-                <Link href="/artists" className={styles.familyViewAll} data-cursor="hover">
+                <div className={styles.familyWorkPreview}>
+                  <div className={styles.familyWorkTitle}>Selected Works</div>
+                  <div className={styles.familyWorkList}>
+                    {activeArtistProjects.length > 0 ? (
+                      activeArtistProjects.map((project) => (
+                        <Link
+                          key={project.id}
+                          href={`/projects/${project.slug}`}
+                          className={styles.familyWorkItem}
+                          data-cursor="hover"
+                        >
+                          <span>{project.title}</span>
+                          <span className={styles.familyWorkArrow}>→</span>
+                        </Link>
+                      ))
+                    ) : (
+                      <p className={styles.familyWorkEmpty}>
+                        No projects yet for this artist.
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <Link
+                  href="/artists"
+                  className={styles.familyViewAll}
+                  data-cursor="hover"
+                >
                   View All Artists →
                 </Link>
               </div>
@@ -317,14 +644,21 @@ export default function ClientPage({ projects }) {
           </div>
         </section>
 
+        {/* Clients marquee (logos) */}
+        <ClientsMarquee />
+
         {/* ══════════════════════════════════
-            SECTION 4 — CATEGORIES
+          SECTION 4 — CATEGORIES
         ══════════════════════════════════ */}
         <section className={styles.categoriesSection}>
           <div className={styles.categoriesInner}>
             <div className={styles.categoriesHead}>
               <h2 className={styles.categoriesTitle}>Categories</h2>
-              <Link href="/categories" className={styles.categoriesViewAll} data-cursor="hover">
+              <Link
+                href="/categories"
+                className={styles.categoriesViewAll}
+                data-cursor="hover"
+              >
                 Explore All
               </Link>
             </div>
@@ -334,12 +668,16 @@ export default function ClientPage({ projects }) {
                   key={name}
                   name={name}
                   count={count}
-                  img={CATEGORY_MEDIA[name] || TRAIL_IMAGES[0]}
+                  img={categoryImages[name] || FALLBACK_IMAGE}
                 />
               ))}
             </div>
             <div className={styles.categoriesButton}>
-              <Link href="/categories" className={styles.categoriesAllBtn} data-cursor="hover">
+              <Link
+                href="/categories"
+                className={styles.categoriesAllBtn}
+                data-cursor="hover"
+              >
                 All Categories
                 <span className={styles.heroBtnSquare} />
               </Link>
@@ -354,28 +692,41 @@ export default function ClientPage({ projects }) {
           <div className={styles.reelInner}>
             <div className={styles.reelHead}>
               <h2 className={styles.reelTitle}>Latest Projects</h2>
-              <Link href="/projects" className={styles.reelViewAll} data-cursor="hover">View All</Link>
+              <Link
+                href="/projects"
+                className={styles.reelViewAll}
+                data-cursor="hover"
+              >
+                View All
+              </Link>
             </div>
             <div className={styles.reelLayout}>
               {/* Left: name list */}
               <ul className={styles.reelList}>
                 {featuredProjects.map((proj, idx) => (
                   <li key={proj.id} className={styles.reelLi}>
-                    {activeIdx === idx && <span className={styles.activeSquare} />}
+                    {activeReelIdx === idx && (
+                      <span className={styles.activeSquare} />
+                    )}
                     <Link
                       href={`/projects/${proj.slug}`}
-                      onMouseEnter={() => setActiveIdx(idx)}
-                      className={`${styles.reelLink} ${activeIdx === idx ? styles.activeReelLink : ''}`}
+                      onMouseEnter={() => setActiveReelIdx(idx)}
+                      className={`${styles.reelLink} ${activeReelIdx === idx ? styles.activeReelLink : ""}`}
                       data-cursor="hover"
                     >
                       <span className={styles.reelLinkTitle}>{proj.title}</span>
-                      <span className={styles.artistLabel}>// {proj.artist}</span>
+                      <span className={styles.artistLabel}>
+                        {"// "}
+                        {proj.artist}
+                      </span>
                     </Link>
                   </li>
                 ))}
                 {featuredProjects.length === 0 && (
                   <li className={styles.reelEmpty}>
-                    <span>Add projects via <Link href="/admin">/admin</Link></span>
+                    <span>
+                      Add projects via <Link href="/admin">/admin</Link>
+                    </span>
                   </li>
                 )}
               </ul>
@@ -389,21 +740,29 @@ export default function ClientPage({ projects }) {
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 1.05 }}
-                      transition={{ duration: 0.7, ease: 'easeOut' }}
+                      transition={{ duration: 0.7, ease: "easeOut" }}
                       className={styles.reelMediaInner}
                     >
-                      <Link href={`/projects/${activeProject.slug}`} data-cursor="hover">
+                      <Link
+                        href={`/projects/${activeProject.slug}`}
+                        data-cursor="hover"
+                      >
                         {activeProject.videoUrl ? (
                           <video
                             src={activeProject.videoUrl}
-                            autoPlay loop muted playsInline
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
                             className={styles.reelMedia}
                           />
                         ) : (
-                          <img
-                            src={activeProject.imageUrl}
+                          <Image
+                            src={activeProject.imageUrl || FALLBACK_IMAGE}
                             alt={activeProject.title}
                             className={styles.reelMedia}
+                            fill
+                            unoptimized
                           />
                         )}
                       </Link>
@@ -414,8 +773,8 @@ export default function ClientPage({ projects }) {
             </div>
           </div>
         </section>
-
-      </div>{/* /pageFg */}
+      </div>
+      {/* /pageFg */}
     </div>
   );
 }

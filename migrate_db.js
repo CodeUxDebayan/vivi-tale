@@ -1,15 +1,35 @@
-const Database = require('better-sqlite3');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const dbPath = path.join(__dirname, 'data.db');
-const db = new Database(dbPath);
-
-try {
-  db.exec('ALTER TABLE projects ADD COLUMN slug TEXT;');
-  db.exec('ALTER TABLE projects ADD COLUMN artistSlug TEXT;');
-  console.log('Migration successful: added slug and artistSlug columns.');
-} catch (err) {
-  console.log('Migration skipped or failed (possibly columns already exist):', err.message);
+function slugify(text) {
+  return String(text || "")
+    .toLowerCase()
+    .replace(/ /g, "-")
+    .replace(/[^\w-]+/g, "");
 }
 
-db.close();
+const dataPath = path.join(__dirname, "data.json");
+
+if (!fs.existsSync(dataPath)) {
+  console.log("No data store found. Nothing to migrate.");
+  process.exit(0);
+}
+
+const data = JSON.parse(fs.readFileSync(dataPath, "utf8"));
+let touched = 0;
+
+data.projects = (data.projects || []).map((project) => {
+  const next = { ...project };
+  if (!next.slug && next.title) {
+    next.slug = slugify(next.title);
+    touched += 1;
+  }
+  if (!next.artistSlug && next.artist) {
+    next.artistSlug = slugify(next.artist);
+    touched += 1;
+  }
+  return next;
+});
+
+fs.writeFileSync(dataPath, JSON.stringify(data, null, 2), "utf8");
+console.log(`Migration complete. Updated ${touched} field(s).`);

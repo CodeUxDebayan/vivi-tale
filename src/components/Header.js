@@ -1,81 +1,144 @@
-'use client'
-import Link from 'next/link'
-import styles from './Header.module.css'
-import { usePathname } from 'next/navigation'
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useTheme } from './ThemeProvider'
+"use client";
+import Link from "next/link";
+import styles from "./Header.module.css";
+import { usePathname } from "next/navigation";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "./ThemeProvider";
 
 export default function Header() {
-  const pathname = usePathname()
-  const [time, setTime] = useState('00:00')
-  const [menuOpen, setMenuOpen] = useState(false)
-  const { theme, toggleTheme } = useTheme()
-
-  if (pathname?.startsWith('/admin')) return null;
+  const pathname = usePathname();
+  const [times, setTimes] = useState({
+    paris: "00:00",
+    kolkata: "00:00",
+    texas: "00:00",
+  });
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuHovered, setMenuHovered] = useState(false);
+  const [currentTzIndex, setCurrentTzIndex] = useState(0);
+  const { theme, toggleTheme } = useTheme();
+  const menuCloseTimeoutRef = useRef(null);
 
   useEffect(() => {
     const updateClock = () => {
-      const date = new Date()
-      const formatter = new Intl.DateTimeFormat('fr-FR', {
-        timeZone: 'Europe/Paris',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      })
-      setTime(formatter.format(date))
-    }
-    updateClock()
-    const interval = setInterval(updateClock, 1000)
-    return () => clearInterval(interval)
-  }, [])
+      const date = new Date();
+      const parisFormatter = new Intl.DateTimeFormat("fr-FR", {
+        timeZone: "Europe/Paris",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      const kolkataFormatter = new Intl.DateTimeFormat("en-IN", {
+        timeZone: "Asia/Kolkata",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      const texasFormatter = new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/Chicago",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      setTimes({
+        paris: parisFormatter.format(date),
+        kolkata: kolkataFormatter.format(date),
+        texas: texasFormatter.format(date),
+      });
+    };
+    updateClock();
+    const interval = setInterval(updateClock, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (menuCloseTimeoutRef.current)
+        clearTimeout(menuCloseTimeoutRef.current);
+    };
+  }, []);
+
+  if (pathname?.startsWith("/admin")) return null;
+
+  const handleMenuClose = () => {
+    if (menuCloseTimeoutRef.current) clearTimeout(menuCloseTimeoutRef.current);
+    menuCloseTimeoutRef.current = setTimeout(() => {
+      setMenuOpen(false);
+      setMenuHovered(false);
+    }, 300);
+  };
+
+  const handleMenuMouseEnter = () => {
+    if (menuCloseTimeoutRef.current) clearTimeout(menuCloseTimeoutRef.current);
+    setMenuHovered(true);
+    setMenuOpen(true);
+  };
 
   const navLinks = [
-    { name: 'Artists', path: '/artists' },
-    { name: 'Categories', path: '/categories' },
-    { name: 'About', path: '/about' },
-    { name: 'Contact', path: '/contact' }
-  ]
+    { name: "Home", path: "/" },
+    { name: "Artists", path: "/artists" },
+    { name: "Categories", path: "/categories" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
+  ];
 
   const pillVariants = {
     closed: { width: 100, borderRadius: 40 },
-    open: { width: 'auto', borderRadius: 8 }
-  }
+    open: { width: "auto", borderRadius: 8 },
+  };
 
   const navItemVariants = {
-    hidden: { y: '100%', opacity: 0 },
+    hidden: { y: "100%", opacity: 0 },
     visible: (i) => ({
       y: 0,
       opacity: 1,
       transition: {
         delay: 0.08 * i + 0.15,
         duration: 0.6,
-        ease: [0.165, 0.84, 0.44, 1]
-      }
+        ease: [0.165, 0.84, 0.44, 1],
+      },
     }),
     exit: (i) => ({
-      y: '-100%',
+      y: "-100%",
       opacity: 0,
       transition: {
         delay: 0.04 * i,
         duration: 0.4,
-        ease: [0.65, 0, 0.35, 1]
-      }
-    })
-  }
+        ease: [0.65, 0, 0.35, 1],
+      },
+    }),
+  };
 
   return (
     <>
       {/* Top bar */}
       <header className={styles.header}>
-        <Link href="/" className={styles.logo} data-cursor="hover">
-          <span className={styles.logoSquare} />
-          TALES BY VIVI
+        <Link
+          href="/"
+          className={styles.logo}
+          data-cursor="hover"
+          aria-label="Go to homepage"
+        >
+          <img src="/logo.png" alt="Tales by VIVI" className={styles.logoImg} />
         </Link>
         <div className={styles.headerRight}>
-          <div className={styles.clock}>
-            <span className={styles.clockCity}>PARIS</span>
-            <span className={styles.clockTime}>{time}</span>
+          <div
+            className={styles.clock}
+            onClick={() => setCurrentTzIndex((prev) => (prev + 1) % 3)}
+            data-cursor="pointer"
+            style={{ cursor: "pointer" }}
+          >
+            <span className={styles.clockCity}>
+              {currentTzIndex === 0
+                ? "PARIS"
+                : currentTzIndex === 1
+                  ? "KOLKATA"
+                  : "TEXAS"}
+            </span>
+            <span className={styles.clockTime}>
+              {currentTzIndex === 0
+                ? times.paris
+                : currentTzIndex === 1
+                  ? times.kolkata
+                  : times.texas}
+            </span>
           </div>
         </div>
       </header>
@@ -85,15 +148,17 @@ export default function Header() {
         <motion.div
           className={styles.menuPill}
           variants={pillVariants}
-          animate={menuOpen ? 'open' : 'closed'}
-          transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+          animate={menuOpen ? "open" : "closed"}
+          transition={{ type: "spring", stiffness: 400, damping: 35 }}
+          onMouseEnter={handleMenuMouseEnter}
+          onMouseLeave={handleMenuClose}
         >
           <AnimatePresence mode="wait">
             {!menuOpen ? (
               <motion.button
                 key="menu-btn"
                 className={styles.menuBtn}
-                onClick={() => setMenuOpen(true)}
+                onClick={() => setMenuOpen(!menuOpen)}
                 data-cursor="hover"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1, transition: { delay: 0.2 } }}
@@ -121,10 +186,12 @@ export default function Header() {
                       <Link
                         href={link.path}
                         onClick={() => setMenuOpen(false)}
-                        className={`${styles.navItem} ${pathname === link.path ? styles.active : ''}`}
+                        className={`${styles.navItem} ${pathname === link.path ? styles.active : ""}`}
                         data-cursor="hover"
                       >
-                        {pathname === link.path && <span className={styles.activeSquare} />}
+                        {pathname === link.path && (
+                          <span className={styles.activeSquare} />
+                        )}
                         {link.name}
                       </Link>
                     </motion.div>
@@ -154,18 +221,20 @@ export default function Header() {
           onClick={toggleTheme}
           data-cursor="hover"
           aria-label="Toggle dark/light mode"
-          title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          title={
+            theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"
+          }
         >
           <span
             className={styles.themeCircle}
-            data-active={theme === 'light' ? 'true' : 'false'}
+            data-active={theme === "light" ? "true" : "false"}
           />
           <span
             className={styles.themeCircle}
-            data-active={theme === 'dark' ? 'true' : 'false'}
+            data-active={theme === "dark" ? "true" : "false"}
           />
         </button>
       </div>
     </>
-  )
+  );
 }

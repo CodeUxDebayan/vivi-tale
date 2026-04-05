@@ -3,9 +3,12 @@
   margin: 0 auto;
   padding: 4rem 2rem;
   font-family: system-ui, sans-serif;
-  color: #fff;
-  background-color: #000;
+  color: var(--fg);
+  background-color: var(--bg);
   min-height: 100vh;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .header {
@@ -13,13 +16,21 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 3rem;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid var(--border);
   padding-bottom: 1rem;
+  transition: border-color 0.3s ease;
 }
 
-.header h1 { margin: 0; }
-.header a { color: #888; text-decoration: none; }
-.header a:hover { color: #fff; }
+.header h1 {
+  margin: 0;
+}
+.header a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.header a:hover {
+  color: var(--fg);
+}
 
 .grid {
   display: grid;
@@ -34,11 +45,14 @@
 }
 
 .formPanel {
-  background: #111;
+  background: var(--surface);
   padding: 2rem;
   border-radius: 8px;
-  border: 1px solid #222;
+  border: 1px solid var(--border);
   height: fit-content;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .formPanel h2 {
@@ -55,19 +69,29 @@
 
 .inputGroup label {
   font-size: 0.875rem;
-  color: #aaa;
+  color: var(--muted);
+  transition: color 0.3s ease;
 }
 
-.input, .textarea {
+.input,
+.textarea {
   font-size: 1rem;
   padding: 0.75rem;
-  background-color: #1a1a1a;
-  border: 1px solid #333;
-  color: #fff;
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--fg);
   border-radius: 4px;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
 }
 
-.input:focus, .textarea:focus { border-color: #666; outline: none; }
+.input:focus,
+.textarea:focus {
+  border-color: var(--color-red);
+  outline: none;
+}
 
 .textarea {
   resize: vertical;
@@ -96,13 +120,16 @@
 }
 
 .projectCard {
-  background: #111;
-  border: 1px solid #222;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .projectInfo h3 {
@@ -110,9 +137,10 @@
 }
 
 .projectInfo p {
-  color: #888;
+  color: var(--muted);
   margin: 0;
   font-size: 0.875rem;
+  transition: color 0.3s ease;
 }
 
 .deleteButton {
@@ -122,10 +150,130 @@
   padding: 0.5rem 1rem;
   border-radius: 4px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
   transition: all 0.2s;
 }
 
 .deleteButton:hover {
   background: #ff4444;
   color: #fff;
+}
+
+.editButton {
+  background: transparent;
+  color: var(--fg);
+  border: 1px solid var(--muted);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  transition:
+    background-color 0.18s,
+    color 0.18s,
+    border-color 0.18s;
+}
+.editButton:hover {
+  background: var(--surface);
+  border-color: var(--color-red);
+  color: var(--color-red);
+}
+
+.artistList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.artistCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--border);
+}
+.artistName {
+  font-weight: 600;
+}
+.artistSlug {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.artistPicker {
+  position: relative;
+  width: 100%;
+}
+
+.artistPickerInput {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: #0f1115;
+  color: #fff;
+  outline: none;
+}
+
+.artistPickerInput::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.artistPickerInput:focus {
+  border-color: var(--color-red);
+}
+
+.artistPickerDropdown {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 0.4rem);
+  z-index: 50;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  max-height: 240px;
+  overflow-y: auto;
+  background: #090b0f;
+  color: #fff;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
+}
+
+.artistPickerItem {
+  padding: 0.8rem 0.9rem;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.artistPickerItem:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.artistPickerEmpty {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 0.9rem;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.artistPickerAddBtn {
+  background: transparent;
+  border: 1px solid var(--color-red);
+  color: #fff;
+  border-radius: 4px;
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+}
+
+.artistPickerAddBtn:hover {
+  background: var(--color-red);
 }

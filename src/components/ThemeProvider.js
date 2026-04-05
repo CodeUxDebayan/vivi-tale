@@ -1,26 +1,31 @@
-'use client';
-import { createContext, useContext, useEffect, useState } from 'react';
+"use client";
+import { createContext, useContext, useEffect, useState } from "react";
 
-const ThemeContext = createContext({ theme: 'dark', toggleTheme: () => {} });
+const ThemeContext = createContext({ theme: "dark", toggleTheme: () => {} });
 
 export function useTheme() {
   return useContext(ThemeContext);
 }
 
 export default function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState('dark');
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem("tbv-theme") || "dark";
+    } catch (e) {
+      return "dark";
+    }
+  });
 
+  // Keep document attribute and localStorage in sync with state
   useEffect(() => {
-    const stored = localStorage.getItem('tbv-theme') || 'dark';
-    setTheme(stored);
-    document.documentElement.setAttribute('data-theme', stored);
-  }, []);
+    try {
+      localStorage.setItem("tbv-theme", theme);
+    } catch (e) {}
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
 
   const toggleTheme = () => {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    localStorage.setItem('tbv-theme', next);
-    document.documentElement.setAttribute('data-theme', next);
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
 
   return (

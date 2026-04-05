@@ -1,9 +1,9 @@
-import { getProjects } from './actions';
-import ClientPage from './ClientPage';
+import { getProjects, getArtists } from "./actions";
+import ClientPage from "./ClientPage";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const projects = await getProjects();
-  return <ClientPage projects={projects} />;
+  const [projects, artists] = await Promise.all([getProjects(), getArtists()]);
+  return <ClientPage projects={projects} artists={artists} />;
 }

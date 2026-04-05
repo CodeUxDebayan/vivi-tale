@@ -88,8 +88,9 @@
   font-size: 1.2rem;
   cursor: pointer;
   opacity: 0;
-  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
-              opacity 0.3s ease;
+  transition:
+    transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+    opacity 0.3s ease;
 }
 
 .newsletterBtnVisible {
@@ -183,7 +184,9 @@
   background-color: var(--color-red);
   border-radius: 1px;
   opacity: 0;
-  transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transition:
+    opacity 0.3s ease,
+    transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
   transform: scale(0);
 }
 
@@ -243,9 +246,100 @@
   letter-spacing: -0.04em;
   /* Ghost/outline effect — fill transparent, just stroke */
   color: transparent;
-  -webkit-text-stroke: 1.5px rgba(255,255,255,0.12);
-  text-stroke: 1.5px rgba(255,255,255,0.12);
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.12);
+  text-stroke: 1.5px rgba(255, 255, 255, 0.12);
+  -webkit-user-select: none;
   user-select: none;
   pointer-events: none;
   margin-top: 3rem;
+}
+
+.bigLogoLine {
+  display: block;
+  white-space: nowrap;
+}
+
+.bigLogoChar {
+  display: inline-block;
+  animation: footerCharFloat 3.6s ease-in-out infinite;
+}
+
+.bigLogoChar:nth-child(2n) {
+  animation-delay: 0.15s;
+}
+
+.bigLogoChar:nth-child(3n) {
+  animation-delay: 0.3s;
+}
+
+@keyframes footerCharFloat {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* ─── Light Mode Overrides ─── */
+[data-theme="light"] .wrapper {
+  background-color: var(--color-offwhite-2);
+  color: var(--color-black);
+}
+
+[data-theme="light"] .tagline {
+  color: var(--color-black);
+}
+
+[data-theme="light"] .newsletterInput {
+  background-color: var(--color-offwhite);
+  color: var(--color-black);
+}
+
+[data-theme="light"] .newsletterInput::placeholder {
+  color: var(--color-grey-2);
+}
+
+[data-theme="light"] .newsletterInput:focus {
+  background-color: #fff;
+}
+
+[data-theme="light"] .newsletterBtn {
+  color: var(--color-black);
+}
+
+[data-theme="light"] .bigLogo {
+  -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.08);
+  text-stroke: 1.5px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .successMsg {
+  color: var(--color-grey-2);
+}
+
+[data-theme="light"] .socialLink {
+  color: var(--color-grey-2);
+}
+
+[data-theme="light"] .socialLink::after {
+  color: var(--color-grey-2);
+}
+
+[data-theme="light"] .navItem {
+  color: var(--color-grey-2);
+}
+
+[data-theme="light"] .navItem:hover {
+  color: var(--color-black);
+}
+
+[data-theme="light"] .credits {
+  color: var(--color-grey-2);
+}
+
+[data-theme="light"] .creditsSep {
+  background-color: var(--color-grey-2);
 }

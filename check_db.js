@@ -1,13 +1,24 @@
-const Database = require('better-sqlite3');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const dbPath = path.join(__dirname, 'data.db');
-const db = new Database(dbPath);
+const dataPath = path.join(__dirname, "data.json");
 
-console.log('--- Projects ---');
-console.log(JSON.stringify(db.prepare('PRAGMA table_info(projects)').all(), null, 2));
+if (!fs.existsSync(dataPath)) {
+  console.log(
+    "No data store found. Create one by running the app or `node seed.js`.",
+  );
+  process.exit(0);
+}
 
-console.log('--- Artists ---');
-console.log(JSON.stringify(db.prepare('PRAGMA table_info(artists)').all(), null, 2));
+const data = JSON.parse(fs.readFileSync(dataPath, "utf8"));
 
-db.close();
+console.log("--- Projects Count ---");
+console.log((data.projects || []).length);
+console.log("--- Artists Count ---");
+console.log((data.artists || []).length);
+
+console.log("--- Project Fields ---");
+console.log(Object.keys((data.projects || [])[0] || {}));
+
+console.log("--- Artist Fields ---");
+console.log(Object.keys((data.artists || [])[0] || {}));

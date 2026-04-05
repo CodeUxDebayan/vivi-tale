@@ -1,12 +1,12 @@
-'use client'
-import { motion } from 'framer-motion'
-import { usePathname } from 'next/navigation'
+"use client";
+import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 export default function Template({ children }) {
-  const pathname = usePathname()
-  
-  if (pathname.startsWith('/admin') || pathname.startsWith('/login')) {
-    return <>{children}</>
+  const pathname = usePathname();
+
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/login")) {
+    return <>{children}</>;
   }
 
   return (
@@ -19,5 +19,5 @@ export default function Template({ children }) {
     >
       {children}
     </motion.div>
-  )
+  );
 }
