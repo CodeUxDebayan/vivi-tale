@@ -10,7 +10,6 @@
   justify-content: space-between;
   padding: 2rem 3vw;
   pointer-events: none;
-  mix-blend-mode: difference;
 }
 
 .logo {

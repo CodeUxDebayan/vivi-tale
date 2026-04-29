@@ -5,8 +5,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import SplitTextReveal from "../components/SplitTextReveal";
-import GooeyBackground from "../components/GooeyBackground";
 import ClientsMarquee from "../components/ClientsMarquee";
 import styles from "./page.module.css";
 
@@ -141,7 +139,7 @@ export default function ClientPage({ projects, artists = [] }) {
   const lastFamilyIdxRef = useRef(-1);
   const [activeFamilyIdx, setActiveFamilyIdx] = useState(0);
   const [activeReelIdx, setActiveReelIdx] = useState(0);
-  const [showreelCopyStep, setShowreelCopyStep] = useState(-1);
+  const [showreelCopyStep, setShowreelCopyStep] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [introPhase, setIntroPhase] = useState("playing");
 
@@ -257,7 +255,7 @@ export default function ClientPage({ projects, artists = [] }) {
         setVideoOpacity(0.36 + visualProgress * 0.64);
         setOverlayOpacity(0.34 - visualProgress * 0.16);
 
-        const nextStep = p < 0.28 ? -1 : p < 0.6 ? 0 : 1;
+        const nextStep = p < 0.28 ? 0 : p < 0.62 ? 1 : 2;
         setShowreelCopyStep((prev) => (prev === nextStep ? prev : nextStep));
       },
     });
@@ -315,7 +313,7 @@ export default function ClientPage({ projects, artists = [] }) {
     // Safety timeout in case video ended doesn't fire on some browsers.
     const forceExit = setTimeout(() => {
       setIntroPhase((prev) => (prev === "playing" ? "exiting" : prev));
-    }, 5200);
+    }, 3000);
 
     return () => clearTimeout(forceExit);
   }, [introPhase]);
@@ -367,7 +365,7 @@ export default function ClientPage({ projects, artists = [] }) {
               autoPlay
               muted
               playsInline
-              preload="auto"
+              preload="metadata"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.45, ease: "easeOut" }}
@@ -412,48 +410,9 @@ export default function ClientPage({ projects, artists = [] }) {
 
       <div className={styles.pageFg}>
         {/* ══════════════════════════════════
-            SECTION 1 — HERO
+            SECTION 1 — SHOWREEL HERO
         ══════════════════════════════════ */}
-        <section className={styles.heroSection}>
-          <GooeyBackground />
-          <div className={styles.heroInner}>
-            <SplitTextReveal
-              elementType="h1"
-              className={styles.heroTitle}
-              text="TALES BY VIVI"
-              delay={0.3}
-              stagger={0.07}
-            />
-            <motion.p
-              className={styles.heroTagline}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.4, duration: 0.8, ease: "easeOut" }}
-            >
-              Your creative partner for Animation &amp; Imagery.
-              <br />
-              Digital Artists. World-class. Nothing else.
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.8, duration: 0.8, ease: "easeOut" }}
-            >
-              <Link
-                href="/about"
-                className={styles.heroBtn}
-                data-cursor="hover"
-              >
-                <span className={styles.heroBtnSquare} />
-                Read More
-              </Link>
-            </motion.div>
-          </div>
-        </section>
 
-        {/* ══════════════════════════════════
-            SECTION 2 — SHOWREEL
-        ══════════════════════════════════ */}
         <section className={styles.showreelSection} ref={showreelRef}>
           <motion.div
             className={styles.showreelInner}
@@ -464,7 +423,7 @@ export default function ClientPage({ projects, artists = [] }) {
           >
             <div className={styles.showreelCopyWrap}>
               <AnimatePresence mode="wait">
-                {showreelCopyStep === -1 ? null : showreelCopyStep === 0 ? (
+                {showreelCopyStep === 0 ? (
                   <motion.div
                     key="showreel-copy-1"
                     className={styles.showreelCopyPanel}
@@ -473,14 +432,32 @@ export default function ClientPage({ projects, artists = [] }) {
                     exit={{ opacity: 0, y: -16, scale: 0.98 }}
                     transition={{ duration: 0.42, ease: "easeOut" }}
                   >
+                    <span className={styles.showreelCopyEyebrow}>
+                      Tales by VIVI
+                    </span>
+                    <h2
+                      className={`${styles.showreelHeading} ${styles.showreelHeadingMain}`}
+                    >
+                      The first frame
+                    </h2>
+                  </motion.div>
+                ) : showreelCopyStep === 1 ? (
+                  <motion.div
+                    key="showreel-copy-2"
+                    className={styles.showreelCopyPanel}
+                    initial={{ opacity: 0, y: 16, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -16, scale: 0.98 }}
+                    transition={{ duration: 0.42, ease: "easeOut" }}
+                  >
                     <span className={styles.showreelCopyEyebrow}>Showreel</span>
                     <h2 className={styles.showreelHeading}>
-                      Chaos Meets Vision
+                      Chaos meets vision
                     </h2>
                   </motion.div>
                 ) : (
                   <motion.div
-                    key="showreel-copy-2"
+                    key="showreel-copy-3"
                     className={styles.showreelCopyPanel}
                     initial={{ opacity: 0, y: 16, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -548,6 +525,46 @@ export default function ClientPage({ projects, artists = [] }) {
             </div>
           </motion.div>
         </section>
+
+        {/* ══════════════════════════════════
+            SECTION 2 — CATEGORIES
+        ══════════════════════════════════ */}
+        <section className={styles.categoriesSection}>
+          <div className={styles.categoriesInner}>
+            <div className={styles.categoriesHead}>
+              <h2 className={styles.categoriesTitle}>Categories</h2>
+              <Link
+                href="/categories"
+                className={styles.categoriesViewAll}
+                data-cursor="hover"
+              >
+                Explore All
+              </Link>
+            </div>
+            <div className={styles.categoriesList}>
+              {Object.entries(categories).map(([name, count]) => (
+                <CategoryRow
+                  key={name}
+                  name={name}
+                  count={count}
+                  img={categoryImages[name] || FALLBACK_IMAGE}
+                />
+              ))}
+            </div>
+            <div className={styles.categoriesButton}>
+              <Link
+                href="/categories"
+                className={styles.categoriesAllBtn}
+                data-cursor="hover"
+              >
+                All Categories
+                <span className={styles.heroBtnSquare} />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <ClientsMarquee />
 
         {/* ══════════════════════════════════
             SECTION 3 — THE FAMILY
@@ -644,49 +661,8 @@ export default function ClientPage({ projects, artists = [] }) {
           </div>
         </section>
 
-        {/* Clients marquee (logos) */}
-        <ClientsMarquee />
-
         {/* ══════════════════════════════════
-          SECTION 4 — CATEGORIES
-        ══════════════════════════════════ */}
-        <section className={styles.categoriesSection}>
-          <div className={styles.categoriesInner}>
-            <div className={styles.categoriesHead}>
-              <h2 className={styles.categoriesTitle}>Categories</h2>
-              <Link
-                href="/categories"
-                className={styles.categoriesViewAll}
-                data-cursor="hover"
-              >
-                Explore All
-              </Link>
-            </div>
-            <div className={styles.categoriesList}>
-              {Object.entries(categories).map(([name, count]) => (
-                <CategoryRow
-                  key={name}
-                  name={name}
-                  count={count}
-                  img={categoryImages[name] || FALLBACK_IMAGE}
-                />
-              ))}
-            </div>
-            <div className={styles.categoriesButton}>
-              <Link
-                href="/categories"
-                className={styles.categoriesAllBtn}
-                data-cursor="hover"
-              >
-                All Categories
-                <span className={styles.heroBtnSquare} />
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════
-            SECTION 5 — FEATURED PROJECTS REEL
+            SECTION 4 — FEATURED PROJECTS REEL
         ══════════════════════════════════ */}
         <section className={styles.reelSection}>
           <div className={styles.reelInner}>

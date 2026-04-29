@@ -260,7 +260,7 @@
   position: relative;
   height: 100vh;
   padding: 0;
-  margin-top: -12rem;
+  margin-top: 0;
   overflow: hidden;
   z-index: 15;
 }
@@ -308,6 +308,12 @@
   font-weight: 400;
   color: var(--fg);
   max-width: 12ch;
+}
+
+.showreelHeadingMain {
+  font-size: clamp(2.8rem, 9vw, 10rem);
+  letter-spacing: -0.03em;
+  line-height: 0.88;
 }
 
 .showreelCopyCta {
@@ -993,7 +999,7 @@
 
   .showreelSection {
     height: 100svh;
-    margin-top: -3.25rem;
+    margin-top: 0;
   }
 
   .showreelInner {
