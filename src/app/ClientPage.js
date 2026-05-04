@@ -75,6 +75,9 @@ function CursorTrail({ containerRef, images = [] }) {
           data-trail-img
           className={styles.trailImg}
           draggable={false}
+          width={120}
+          height={120}
+          unoptimized
         />
       ))}
     </div>
@@ -433,12 +436,12 @@ export default function ClientPage({ projects, artists = [] }) {
                     transition={{ duration: 0.42, ease: "easeOut" }}
                   >
                     <span className={styles.showreelCopyEyebrow}>
-                      Tales by VIVI
+                      The first frame
                     </span>
                     <h2
                       className={`${styles.showreelHeading} ${styles.showreelHeadingMain}`}
                     >
-                      The first frame
+                      Tales by VIVI
                     </h2>
                   </motion.div>
                 ) : showreelCopyStep === 1 ? (

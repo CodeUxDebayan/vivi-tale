@@ -1,4 +1,26 @@
 {
-  "projects": [],
-  "artists": []
+  "projects": [
+    {
+      "id": 1,
+      "title": "asfgasgfasg",
+      "slug": "gsgasgasgasgasg",
+      "category": "cbsbasbdd",
+      "imageUrl": "https://dggadgadgadgadgad.com",
+      "videoUrl": "https://dggadgadgadgadgad.com",
+      "description": "adgadgagagagadg",
+      "artist": "Debayan",
+      "artistSlug": "debayan",
+      "createdAt": "2026-05-04T17:43:50.306Z"
+    }
+  ],
+  "artists": [
+    {
+      "id": 1,
+      "name": "Debayan",
+      "slug": "debayan",
+      "slogan": "ggegag",
+      "bio": "FRWESAFDSGFG",
+      "createdAt": "2026-05-04T17:43:14.482Z"
+    }
+  ]
 }
